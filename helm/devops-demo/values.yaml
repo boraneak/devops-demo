@@ -1,0 +1,10 @@
+image:
+  repository: ghcr.io/boraneak/devops-demo
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8000
+
+replicaCount: 1
