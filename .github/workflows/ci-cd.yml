@@ -45,8 +45,13 @@ jobs:
         with:
           cluster_name: devops-demo
 
+      - name: Install Prometheus CRDs
+        run: |
+          kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+
       - name: Deploy via Helm
         run: |
           helm upgrade --install devops-demo ./helm/devops-demo \
             --set image.tag=${{ github.sha }} \
+            --set image.pullPolicy=IfNotPresent \
             --wait
