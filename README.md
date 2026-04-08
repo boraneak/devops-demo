@@ -20,8 +20,10 @@ A DevOps pipeline demonstrating end-to-end CI/CD, infrastructure as code, and ob
 ## Pipeline
 
 ```
-git push → build image → Trivy scan → push to GHCR → deploy to K8s via Helm
+git push → build image → Trivy scan → push to GHCR (SHA + latest tags) → deploy to Kind via Helm
 ```
+
+> CI/CD runs on GitHub Actions runner. Local cluster is managed separately via `setup.sh`.
 
 ## Architecture
 
@@ -45,28 +47,18 @@ git push → build image → Trivy scan → push to GHCR → deploy to K8s via H
 
 ### Setup
 
+Run the setup script to provision the cluster, install observability, and deploy the app:
+
 ```bash
-# Provision cluster
-cd terraform && terraform init && terraform apply -auto-approve
-
-# Add Prometheus Helm repo
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-
-# Install observability stack
-helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-  --namespace monitoring --create-namespace
-
-# Deploy app
-helm upgrade --install devops-demo ./helm/devops-demo \
-  --set image.tag=latest \
-  --set image.pullPolicy=IfNotPresent
+./setup.sh
 ```
 
 ### Access
 
 **Grafana:** `kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring`
+
 Open http://localhost:3000 with username `admin`.
+
 Get password:
 ```bash
 kubectl get secret monitoring-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
