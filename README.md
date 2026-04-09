@@ -47,10 +47,25 @@ git push → build image → Trivy scan → push to GHCR (SHA + latest tags) →
 
 ### Setup
 
-Run the setup script to provision the cluster, install observability, and deploy the app:
-
+**1. Provision the cluster**
 ```bash
-./setup.sh
+cd terraform && terraform init && terraform apply -auto-approve && cd ..
+```
+
+**2. Install observability stack**
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace
+```
+
+**3. Load image and deploy app**
+```bash
+kind load docker-image ghcr.io/boraneak/devops-demo:latest --name devops-demo
+helm upgrade --install devops-demo ./helm/devops-demo \
+  --set image.tag=latest \
+  --set image.pullPolicy=IfNotPresent
 ```
 
 ### Access
