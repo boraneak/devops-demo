@@ -84,3 +84,7 @@ kubectl get secret monitoring-grafana -n monitoring -o jsonpath="{.data.admin-pa
 ## Note
 
 Runs on Kind for local development. Production deployment targets EKS/GKE with the same Helm charts and pipeline.
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
