@@ -23,8 +23,6 @@ A DevOps pipeline demonstrating end-to-end CI/CD, infrastructure as code, and ob
 git push → build image → Trivy scan → push to GHCR (SHA + latest tags) → deploy to ephemeral Kind cluster (CI validation)
 ```
 
-> CI/CD runs on GitHub Actions runner. Local cluster is managed separately via `setup.sh`.
-
 ## Architecture
 
 - FastAPI app exposes `/health` and `/metrics` endpoints
